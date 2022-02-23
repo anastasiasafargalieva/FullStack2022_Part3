@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+var morgan = require('morgan')
+
 
 
 const PORT = 3001
@@ -9,6 +11,7 @@ app.listen(PORT, () => {
 })
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [
     {
