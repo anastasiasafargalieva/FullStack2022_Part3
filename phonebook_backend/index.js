@@ -10,7 +10,7 @@ app.listen(PORT, () => {
 
 app.use(express.json())
 
-const persons = [
+let persons = [
     {
         "id": 1,
         "name": "Arto Hellas",
@@ -48,4 +48,10 @@ app.get("/api/persons/:id", (req, res)=>{
     const person = persons.find( e => e.id === id )
     if (person) res.json( person )
     else res.status(404).send(`Person with id ${id} not found.`)
+})
+
+app.delete("/api/persons/:id", (req, res)=> {
+    const id = Number(req.params.id)
+    persons = persons.filter( e => e.id !== id)
+    res.status(204).end()
 })
