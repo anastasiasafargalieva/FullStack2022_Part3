@@ -60,7 +60,9 @@ app.post("/api/persons", (req, res)=>{
     const newPerson = req.body
     if (!newPerson.name) return res.status(400).json({error:"Missing name property"})
     if (!newPerson.number) return res.status(400).json({error:"Missing number property"})
+    if ( persons.find(e => e.name.toLowerCase().trim() === newPerson.name.toLowerCase().trim()) )
+        return res.status(400).json({error:"The name must be unique"})
     newPerson.id = Math.floor( Math.random() * 100000 )
-    persons.concat(newPerson)
+    persons = persons.concat(newName)
     res.json(newPerson)
 })
