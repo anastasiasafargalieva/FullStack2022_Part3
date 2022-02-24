@@ -4,6 +4,10 @@
   "description": "exercise 3 full stack",
   "main": "node index.js",
   "scripts": {
+    "build:ui":"rm -rf build && cd ../../part2/phonebook && npm run build --prod && cp -r build ../../part3/phonebook && rm -rf build && cd ../../part3/phonebook",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +15,7 @@
   "author": "Anastasia Safargalieva",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "morgan": "^1.10.0"
   },
