@@ -33,20 +33,17 @@ app.get("/info", (req, res)=>{
     )
 }) 
 
-app.get("/api/persons/:id", (req, res)=>{
+app.get("/api/persons/:id", (req, res, next)=>{
     Person.findById(req.params.id).then( person => {
         if (person) res.json(person)
         else res.status(404).send(`Person with id ${id} not found.`)
-    }).catch( error => {
-        console.log(error)
-        res.status(400).send("malformatted id")
-    } )
+    }).catch( error => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res)=> {
+app.delete("/api/persons/:id", (req, res, next)=> {
     Person.findByIdAndRemove( req.params.id ).then( result => {
         res.status(204).end()
-    }).catch( error => res.status(500).end() )
+    }).catch( error => next(error) )
 })
 
 app.post("/api/persons", (req, res)=>{
@@ -62,5 +59,18 @@ app.post("/api/persons", (req, res)=>{
     } )
     person.save().then( savedPerson => res.json(savedPerson) )
 })
+
+
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError') return res.status(400).send({ error: 'malformatted id' })
+    next(error)
+}
+app.use( errorHandler )
 
 //to deploy heroku use command  $ git subtree push --prefix phonebook_backend heroku main
