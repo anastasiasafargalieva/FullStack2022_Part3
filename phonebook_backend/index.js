@@ -34,7 +34,8 @@ app.get("/info", (req, res)=>{
 }) 
 
 app.get("/api/persons/:id", (req, res, next)=>{
-    Person.findById(req.params.id).then( person => {
+    const id = req.params.id
+    Person.findById(id).then( person => {
         if (person) res.json(person)
         else res.status(404).send(`Person with id ${id} not found.`)
     }).catch( error => next(error))
@@ -60,6 +61,15 @@ app.post("/api/persons", (req, res)=>{
     person.save().then( savedPerson => res.json(savedPerson) )
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+    const updateRequest = {
+        name: req.body.name,
+        number: req.body.number
+    }
+    Person.findByIdAndUpdate( req.params.id, updateRequest, {new: true} )
+        .then( updatedPerson => res.json(updatedPerson) )
+        .catch( error => next(error) )
+})
 
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: 'unknown endpoint' })
