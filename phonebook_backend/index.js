@@ -47,7 +47,7 @@ app.delete("/api/persons/:id", (req, res, next)=> {
     }).catch( error => next(error) )
 })
 
-app.post("/api/persons", (req, res)=>{
+app.post("/api/persons", (req, res, next)=>{
     const newPerson = req.body
     if (newPerson === undefined) res.status(400).json( {error:"Content missing"} )
     if (!newPerson.name) return res.status(400).json({error:"Missing name property"})
@@ -58,7 +58,9 @@ app.post("/api/persons", (req, res)=>{
         name: newPerson.name,
         number: newPerson.number
     } )
-    person.save().then( savedPerson => res.json(savedPerson) )
+    person.save()
+        .then(savedPerson => res.json(savedPerson))
+        .catch( error => next(error) )
 })
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -79,6 +81,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
     if (error.name === 'CastError') return res.status(400).send({ error: 'malformatted id' })
+    else if (error.name === 'ValidationError') return res.status(400).json({ error: error.message })
     next(error)
 }
 app.use( errorHandler )
