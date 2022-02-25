@@ -73,3 +73,5 @@ app.post("/api/persons", (req, res)=>{
     persons = persons.concat(newName)
     res.json(newPerson)
 })
+
+//to deploy heroku use command  $ git subtree push --prefix phonebook_backend heroku main
