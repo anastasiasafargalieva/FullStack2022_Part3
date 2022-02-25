@@ -5,7 +5,7 @@
   "main": "node index.js",
   "scripts": {
     "build:ui": "rm -rf build && cd ../../FullStack2022-Part2/phonebook/ && npm run build --prod && cp -r build ../../FullStack2022-Part3/phonebook_backend && rm -rf build && cd ../../FullStack2022-Part3/phonebook_backend ",
-    "deploy": "git subtree push --prefix phonebook_backend heroku main",
+    "deploy": "cd .. && git subtree push --prefix phonebook_backend heroku main && cd phonebook_backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "start": "node index.js",
