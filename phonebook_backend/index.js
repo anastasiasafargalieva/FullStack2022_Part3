@@ -6,24 +6,22 @@ const cors = require('cors')
 const Person = require('./src/models/person')
 
 
-// setup morgan
-morgan.token('reqbody', req => JSON.stringify(req.body) ) // morgan token
+
+morgan.token('reqbody', req => JSON.stringify(req.body) ) 
 const requestLogger = morgan(':method :url :status :res[content-length] - :response-time ms :reqbody')
 
-// middlewares
-app.use(cors()) // enable cors
-app.use(express.static('build')) // serve static contents from build folder
-app.use( express.json() ) // transform every json request to json
-app.use( requestLogger ) // print all requests
+app.use(cors()) 
+app.use(express.static('build')) 
+app.use( express.json() ) 
+app.use( requestLogger ) 
 
-// port binding
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
 
-// endpoints
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then( result => response.json(result) )
@@ -76,7 +74,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 
-// more event handlers
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
@@ -89,4 +86,4 @@ const errorHandler = (error, request, response, next) => {
   else if (error.name === 'ValidationError') return response.status(400).json({ error: error.message })
   next(error)
 }
-app.use( errorHandler ) // handle errors
+app.use( errorHandler ) 
